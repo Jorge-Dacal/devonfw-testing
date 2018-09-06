@@ -1,4 +1,4 @@
-package com.example.selenium.tests.tests.mythaistarCarlos;
+package com.example.selenium.tests.test.mythaistar;
 
 import org.junit.Test;
 
