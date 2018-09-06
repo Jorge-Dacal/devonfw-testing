@@ -16,7 +16,7 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
  */
 public class ThaiSummaryPage extends BasePage {
 	private static final By	textBoxSearch		= By.id("mat-input-0");
-	private static final By	checkBoxSearch		= By.id("mat-checkbox-1-input");
+	private static final By	checkBoxSearch		= By.xpath("//div[@class='mat-checkbox-inner-container']");
 	private static final By	acceptButtonSearch	= By.xpath("//button[@class='text-upper property-text-bold mat-button mat-accent']");
 	
 	@Override
@@ -42,15 +42,18 @@ public class ThaiSummaryPage extends BasePage {
 		WebElement checkBox = getDriver().findElementDynamic(checkBoxSearch);
 		WebElement acceptButton = getDriver().findElementDynamic(acceptButtonSearch);
 		
-		textBox.sendKeys(bookingId);
-		
-		(new Actions(getDriver())).moveToElement(checkBox)
-				.perform();
-		checkBox.click();
+		for (char c : bookingId.toCharArray()) {
+			textBox.sendKeys(c + "");
+		}
 		
 		driverWait.until((driver) -> driver.findElement(textBoxSearch)
 				.getAttribute("value")
-				.equals(bookingId));
+				.length() == bookingId.length());
+		
+		(new Actions(getDriver())).moveToElement(checkBox)
+				.perform();
+		
+		checkBox.click();
 		acceptButton.click();
 		
 	}

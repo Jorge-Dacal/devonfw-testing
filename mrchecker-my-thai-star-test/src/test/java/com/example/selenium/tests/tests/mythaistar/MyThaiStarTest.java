@@ -16,7 +16,7 @@ public class MyThaiStarTest extends BaseTest {
 	
 	private String[][]		loginUsers;
 	private ThaiHomePage	myThaiStarHome;
-	private String			bookId	= "CB_20170510_123502595Z";
+	private String			bookingId	= "CB_20170510_123502595Z";
 	
 	@Override
 	public void setUp() {
@@ -38,11 +38,10 @@ public class MyThaiStarTest extends BaseTest {
 	public void loginUser() {
 		ThaiLoginPage loginPage = myThaiStarHome.clickLogInButton();
 		
-		/*
-		 * loginPage.enterCredentials(loginUsers[1][0], loginUsers[1][1]);
-		 * Assert.assertFalse("Usuario logeado", myThaiStarHome.isUserLogged(loginUsers[1][0]));
-		 * loginPage = myThaiStarHome.clickLogInButton();
-		 */
+		loginPage.enterCredentials(loginUsers[1][0], loginUsers[1][1]);
+		Assert.assertFalse("Usuario logeado", myThaiStarHome.isUserLogged(loginUsers[1][0]));
+		loginPage = myThaiStarHome.clickLogInButton();
+		
 		loginPage.enterCredentials(loginUsers[0][0], loginUsers[0][1]);
 		Assert.assertTrue("Usuario no logeado", myThaiStarHome.isUserLogged(loginUsers[0][0]));
 	}
@@ -51,6 +50,6 @@ public class MyThaiStarTest extends BaseTest {
 	public void orderMenu() {
 		ThaiMenuPage menuPage = myThaiStarHome.clickMenuButton();
 		ThaiSummaryPage summaryPage = menuPage.clickFirstMenu();
-		summaryPage.orderMenu(bookId);
+		summaryPage.orderMenu(bookingId);
 	}
 }

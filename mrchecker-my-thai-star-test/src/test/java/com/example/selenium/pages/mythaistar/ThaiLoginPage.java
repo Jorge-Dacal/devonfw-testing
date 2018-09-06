@@ -2,6 +2,7 @@ package com.example.selenium.pages.mythaistar;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.capgemini.mrchecker.selenium.core.BasePage;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
@@ -33,7 +34,7 @@ public class ThaiLoginPage extends BasePage {
 	
 	public void enterCredentials(String username, String password) {
 		System.out.println("Ha pasado al enter credentials");
-		// WebDriverWait driverWait = new WebDriverWait(getDriver(), 10);
+		WebDriverWait driverWait = new WebDriverWait(getDriver(), 10);
 		WebElement usernameTextBox = getDriver().findElementDynamic(usernameSearch);
 		WebElement passwordTextBox = getDriver().findElementDynamic(passwordSearch);
 		WebElement accessButton;
@@ -46,6 +47,9 @@ public class ThaiLoginPage extends BasePage {
 			passwordTextBox.sendKeys(c + "");
 		}
 		
+		driverWait.until((driver) -> driver.findElement(passwordSearch)
+				.getAttribute("value")
+				.length() == password.length());
 		accessButton = getDriver().findElementDynamic(acessButtonSearch);
 		accessButton.click();
 	}
