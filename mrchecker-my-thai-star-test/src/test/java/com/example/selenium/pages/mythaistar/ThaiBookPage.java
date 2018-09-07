@@ -1,4 +1,4 @@
-package com.example.selenium.pages.mythaistarCarlos;
+package com.example.selenium.pages.mythaistar;
 
 import java.util.ArrayList;
 import java.util.List;

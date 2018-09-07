@@ -1,9 +1,14 @@
 package com.example.selenium.tests.tests.mythaistar;
 
+import java.util.HashMap;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.capgemini.mrchecker.test.core.BaseTest;
+import com.example.selenium.pages.mythaistar.ThaiBookPage;
+import com.example.selenium.pages.mythaistar.ThaiConfirmBookPage;
+import com.example.selenium.pages.mythaistar.ThaiDateTimePage;
 import com.example.selenium.pages.mythaistar.ThaiHomePage;
 import com.example.selenium.pages.mythaistar.ThaiLoginPage;
 import com.example.selenium.pages.mythaistar.ThaiMenuPage;
@@ -14,18 +19,24 @@ import com.example.selenium.pages.mythaistar.ThaiSummaryPage;
  */
 public class MyThaiStarTest extends BaseTest {
 
-  private String[][] loginUsers;
+  private HashMap<String, String> loginUsers;
 
   private ThaiHomePage myThaiStarHome;
 
-  private String bookingId = "CB_20170509_123502555Z";
+  private String bookingId;
+
+  private String[] bookingData;
 
   @Override
   public void setUp() {
 
     this.myThaiStarHome = new ThaiHomePage();
-    this.loginUsers = new String[][] { new String[] { "user0", "password" }, new String[] { "userfake", "passfake" },
-    new String[] { "waiter", "waiter" } };
+    this.loginUsers = new HashMap<>();
+    this.loginUsers.put("user0", "password");
+    this.loginUsers.put("userfake", "passfake");
+    this.loginUsers.put("waiter", "waiter");
+    this.bookingId = "CB_20170510_123502595Z";
+    this.bookingData = new String[] { "Jackie Chan", "kungfu@fakemail.com", "8" };
   }
 
   @Override
@@ -39,12 +50,12 @@ public class MyThaiStarTest extends BaseTest {
 
     ThaiLoginPage loginPage = this.myThaiStarHome.clickLogInButton();
 
-    loginPage.enterCredentials(this.loginUsers[1][0], this.loginUsers[1][1]);
-    Assert.assertFalse("Usuario logeado", this.myThaiStarHome.isUserLogged(this.loginUsers[1][0]));
+    loginPage.enterCredentials("userfake", this.loginUsers.get("userfake"));
+    Assert.assertFalse("Usuario logeado", this.myThaiStarHome.isUserLogged("userfake"));
     loginPage = this.myThaiStarHome.clickLogInButton();
 
-    loginPage.enterCredentials(this.loginUsers[0][0], this.loginUsers[0][1]);
-    Assert.assertTrue("Usuario no logeado", this.myThaiStarHome.isUserLogged(this.loginUsers[0][0]));
+    loginPage.enterCredentials("user0", this.loginUsers.get("user0"));
+    Assert.assertTrue("Usuario no logeado", this.myThaiStarHome.isUserLogged("user0"));
   }
 
   @Test
@@ -53,5 +64,20 @@ public class MyThaiStarTest extends BaseTest {
     ThaiMenuPage menuPage = this.myThaiStarHome.clickMenuButton();
     ThaiSummaryPage summaryPage = menuPage.clickFirstMenu();
     summaryPage.orderMenu(this.bookingId);
+  }
+
+  @Test
+  public void bookTable() {
+
+    ThaiBookPage myBookPage = this.myThaiStarHome.clickBookTable();
+    ThaiDateTimePage myDateTimePage = myBookPage.enterTimeAndDate();
+    myDateTimePage.setUpDateAndTime();
+
+    ThaiConfirmBookPage myComfirmPage = myBookPage.enterBookingData(this.bookingData[0], this.bookingData[1],
+        this.bookingData[2]);
+    myComfirmPage.confirmBookingData();
+
+    myBookPage.checkConfirmationDialog();
+
   }
 }

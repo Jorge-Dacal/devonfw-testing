@@ -23,6 +23,10 @@ public class ThaiHomePage extends BasePage {
 
   private static final By menuTabSearch = By.xpath("//a[@routerlink='/menu']");
 
+  private static final String bookTableButtonXpath = "//*[@id=\"homeCard\"]/own-home-card[1]/mat-card/mat-card-actions/button";
+
+  private static final By bookTableButtonSearch = By.xpath(bookTableButtonXpath);
+
   @Override
   public boolean isLoaded() {
 
@@ -89,4 +93,11 @@ public class ThaiHomePage extends BasePage {
     return false;
   }
 
+  public ThaiBookPage clickBookTable() {
+
+    WebElement bookTableButton = getDriver().findElementDynamic(bookTableButtonSearch);
+    bookTableButton.click();
+    return new ThaiBookPage();
+
+  }
 }
