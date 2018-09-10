@@ -14,8 +14,11 @@ import com.capgemini.mrchecker.selenium.core.BasePage;
 public class ThaiHomePage extends BasePage {
 	
 	private static final By	loginButtonSearch		= By.xpath("//button[@class=\"mat-icon-button ng-star-inserted\"]");
-	private static final By	cardSearch				= By.className("mat-card");
-	private static final By	bookTableButtonSearch	= By.tagName("button");
+	//private static final By	cardSearch				= By.className("mat-card");
+	//private static final By	bookTableButtonSearch2	= By.tagName("button");
+	
+	private static final String bookTableButtonXpath = "//*[@id=\"homeCard\"]/own-home-card[1]/mat-card/mat-card-actions/button";
+	private static final By	bookTableButtonSearch	= By.xpath(bookTableButtonXpath);
 	
 	@Override
 	public boolean isLoaded() {
@@ -44,11 +47,19 @@ public class ThaiHomePage extends BasePage {
 	}
 	
 	public ThaiBookPage clickBookTable() {
-		WebElement bookTableButton = getDriver().findElementDynamic(cardSearch)
-				.findElement(bookTableButtonSearch);
-		bookTableButton.click();
+		WebElement bookTableButton = getDriver().findElementDynamic(bookTableButtonSearch);
+		//WebElement bookTableButton2 = getDriver().findElementDynamic(cardSearch).findElement(bookTableButtonSearch2);
 		
+		
+		
+		bookTableButton.click();
+		//bookTableButton2.click();
+		//System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+		//System.out.println(bookTableButton);
+		//System.out.println(bookTableButton.getAttribute("color"));
+		//System.out.println(bookTableButton.findElement(By.tagName("span")).getAttribute("InnerHTML"));
 		return new ThaiBookPage();
+		
 	}
 	
 }
