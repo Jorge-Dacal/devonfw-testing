@@ -20,9 +20,9 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
 public class ThaiReservationsPage extends BasePage {
 
   /* Search criteria */
-  private static final By reservationsTableSearch = By.xpath("//table[@class='td-data-table-body']/tr");
+  private static final By reservationsTableSearch = By.xpath("//tbody[@class='td-data-table-body']/tr");
 
-  private static final By reservationRowSearch = By.tagName("span");
+  private static final By reservationRowSearch = By.xpath(".//span");
 
   /* Map to store email/reservation id data */
   private Map<String, List<String>> tableData;
@@ -64,10 +64,11 @@ public class ThaiReservationsPage extends BasePage {
 
     for (WebElement reservation : reservations) {
       // get date, email, id
-
       reservationsRow = reservation.findElements(reservationRowSearch);
       // get email
       email = reservationsRow.get(1).getText();
+      System.out.printf("date: %s, email %s, id: %s\n", reservationsRow.get(0).getText(),
+          reservationsRow.get(1).getText(), reservationsRow.get(2).getText());
 
       // get reservation id
       id = reservationsRow.get(2).getText();

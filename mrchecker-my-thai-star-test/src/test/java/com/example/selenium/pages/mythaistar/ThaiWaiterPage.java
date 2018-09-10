@@ -30,7 +30,7 @@ public class ThaiWaiterPage extends BasePage {
   @Override
   public void load() {
 
-    BFLogger.logError("MyThaiStar login page was not loaded.");
+    BFLogger.logError("MyThaiStar waiter page was not loaded.");
 
   }
 

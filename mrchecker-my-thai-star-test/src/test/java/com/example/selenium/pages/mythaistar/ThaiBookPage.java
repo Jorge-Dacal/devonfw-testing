@@ -1,7 +1,5 @@
 package com.example.selenium.pages.mythaistar;
 
-import java.util.List;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
@@ -140,10 +138,11 @@ public class ThaiBookPage extends BasePage {
     JavascriptExecutor js = (JavascriptExecutor) getDriver();
     js.executeScript("document.getElementsByClassName('mat-checkbox-inner-container')[1].click();");
 
-    /* Dummy code, just for the wait, otherwise you couldn't see the clicked checkbox. This has to be deleted */
-    List<WebElement> checkBox = getDriver()
-        .findElementDynamics(By.xpath("//span[@class=\"mat-checkbox-inner-container\"]"));
-    checkBox.get(1).click();
+    /*
+     * Dummy code, just for the wait, otherwise you couldn't see the clicked checkbox. This has to be deleted
+     * List<WebElement> checkBox = getDriver()
+     * .findElementDynamics(By.xpath("//span[@class=\"mat-checkbox-inner-container\"]")); checkBox.get(1).click();
+     */
   }
 
 }

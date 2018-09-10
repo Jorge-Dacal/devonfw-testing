@@ -6,6 +6,7 @@ package com.example.selenium.pages.mythaistar;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
 import com.capgemini.mrchecker.selenium.core.BasePage;
@@ -17,7 +18,11 @@ import com.capgemini.mrchecker.selenium.core.exceptions.BFElementNotFoundExcepti
 public class ThaiHomePage extends BasePage {
 
   /* Search criteria */
-  private static final By loginButtonSearch = By.xpath("//button[@class=\"mat-icon-button ng-star-inserted\"]");
+  private static final By loginButtonSearch = By.cssSelector("button.mat-icon-button:nth-child(6)");
+
+  private static final By logoutButtonSearch = By.xpath("//button[@class=\"mat-icon-button\"]");
+
+  private static final By logoutItemSearch = By.xpath("//button[@class=\"mat-menu-item\"]");
 
   private static final By labelLoginSearch = By.xpath("//span[@class='forDesktop']");
 
@@ -59,6 +64,23 @@ public class ThaiHomePage extends BasePage {
     loginButton.click();
 
     return new ThaiLoginPage();
+  }
+
+  /**
+   * Seek for the login button and logs out
+   *
+   */
+  public void clickLogOutButton() {
+
+    WebElement logoutButton = getDriver().findElementDynamic(logoutButtonSearch);
+    logoutButton.click();
+
+    /*
+     * WebElement logoutItem = getDriver().findElementDynamic(logoutItemSearch); logoutItem.click();
+     */
+    String scriptClick = "var we = document.getElementsByClassName(\"mat-menu-item\"); we[we.length-1].click();";
+    JavascriptExecutor js = (JavascriptExecutor) getDriver();
+    js.executeScript(scriptClick);
   }
 
   /**
