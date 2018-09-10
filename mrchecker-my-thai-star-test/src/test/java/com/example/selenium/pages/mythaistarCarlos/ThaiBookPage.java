@@ -1,8 +1,8 @@
 package com.example.selenium.pages.mythaistarCarlos;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 
 import com.capgemini.mrchecker.selenium.core.BasePage;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
@@ -20,6 +20,8 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
  */
 
 public class ThaiBookPage extends BasePage {
+
+  private static final String dateString = "12/9/2018 18:58";
 
   private static final By inputFieldsSearch = By.xpath("//div[@class='mat-form-field-infix']");
 
@@ -47,7 +49,8 @@ public class ThaiBookPage extends BasePage {
 
   private static final String xpathConfirmationDialog = "//*[@id='cdk-overlay-29']/snack-bar-container/simple-snack-bar";
 
-  private static final By dialogSearch = By.xpath(xpathConfirmationDialog);
+  private static final By dialogSearch = By.className("bgc-green-600"); // mat-snack-bar-container
+  // By.xpath(xpathConfirmationDialog);
 
   @Override
   public boolean isLoaded() {
@@ -73,13 +76,16 @@ public class ThaiBookPage extends BasePage {
 
   public void enterTimeAndDate() {
 
+    // JavascriptExecutor js = (JavascriptExecutor) getDriver();
+    // js.executeScript("document.getElementsByClassName('mat-input-element')[1].click();");
+
     // reserva para una hora despues dando click a la flecha de "+1 hora"
     // entonces hace click en el icono de "visto"
     // List<WebElement> inputFields = new ArrayList<WebElement>();
     // inputFields = getDriver().findElementDynamics(inputFieldsSearch);
     WebElement dateInput = getDriver().findElementDynamic(dateSearch);
     // WebElement dateInput = inputFields.get(2);
-    dateInput.sendKeys("7/9/2018 18:45");
+    dateInput.sendKeys(dateString);
     // return new ThaiDateTimePage();
 
   }
@@ -102,20 +108,29 @@ public class ThaiBookPage extends BasePage {
     guestsInput.sendKeys(amountOfGuests);
   }
 
+  /*
+   * public void acceptTerms() {
+   *
+   * WebElement checkbox = getDriver().findElementDynamic(checkboxSearch); Actions action = new Actions(getDriver());
+   * action.moveToElement(checkbox).click().build().perform(); // JavascriptExecutor js = (JavascriptExecutor)
+   * getDriver(); // js.executeScript("arguments[0].click();", checkbox); checkbox.click();// (Keys.SPACE); }
+   */
+
   public void acceptTerms() {
 
-    WebElement checkbox = getDriver().findElementDynamic(checkboxSearch);
-    Actions action = new Actions(getDriver());
-    action.moveToElement(checkbox).click().build().perform();
-    // JavascriptExecutor js = (JavascriptExecutor) getDriver();
-    // js.executeScript("arguments[0].click();", checkbox);
-    checkbox.click();// (Keys.SPACE);
+    JavascriptExecutor js = (JavascriptExecutor) getDriver();
+    js.executeScript("document.getElementsByClassName('mat-checkbox-inner-container')[1].click();");
+
   }
 
   public void clickBookTable() {
 
-    WebElement bookTableButton = getDriver().findElementDynamic(bookTableButtonSearch);
-    getDriver().waitUntilElementIsClickable(bookTableButtonSearch);
+    // WebElement bookTableButton = getDriver().findElementDynamic(bookTableButtonSearch);
+    // getDriver().waitUntilElementIsClickable(bookTableButtonSearch);
+    // System.out.println(getDriver().findElements(By.tagName("button")).get(8).getAttribute("class"));
+    JavascriptExecutor js = (JavascriptExecutor) getDriver();
+    js.executeScript("document.getElementsByTagName('button')[8].click();");
+    // tag: 11
     // bookTableButton.sendKeys(Keys.ENTER);
   }
 
@@ -131,10 +146,11 @@ public class ThaiBookPage extends BasePage {
     return new ThaiConfirmBookPage();
   }
 
-  public void checkConfirmationDialog() {
+  public boolean checkConfirmationDialog() {
 
-    WebElement confirmationDialog = getDriver().findElementDynamic(dialogSearch);
-    System.out.println(confirmationDialog.getAttribute("class"));
+    WebElement greenConfirmationDialog = getDriver().findElementDynamic(dialogSearch);
+    // System.out.println(confirmationDialog.getAttribute("class"));
+    return greenConfirmationDialog.isDisplayed();
   }
 
 }
