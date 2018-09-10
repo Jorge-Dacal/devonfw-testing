@@ -45,7 +45,7 @@ public class MyThaiStarTest extends BaseTest {
 
   }
 
-  @Test
+  // @Test
   public void loginUser() {
 
     ThaiLoginPage loginPage = this.myThaiStarHome.clickLogInButton();
@@ -59,6 +59,13 @@ public class MyThaiStarTest extends BaseTest {
   }
 
   @Test
+  public void bookTableJA() {
+
+    ThaiBookPage bookPage = this.myThaiStarHome.clickBookTable();
+    bookPage.acceptTermsJA();
+  }
+
+  // @Test
   public void orderMenu() {
 
     ThaiMenuPage menuPage = this.myThaiStarHome.clickMenuButton();
@@ -66,7 +73,7 @@ public class MyThaiStarTest extends BaseTest {
     summaryPage.orderMenu(this.bookingId);
   }
 
-  @Test
+  // @Test
   public void bookTable() {
 
     ThaiBookPage myBookPage = this.myThaiStarHome.clickBookTable();
