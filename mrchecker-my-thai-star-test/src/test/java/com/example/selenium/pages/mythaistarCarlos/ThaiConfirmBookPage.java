@@ -7,14 +7,14 @@ import com.capgemini.mrchecker.selenium.core.BasePage;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
 public class ThaiConfirmBookPage extends BasePage {
-  public static final By sendSearch = By
-      .xpath("//*[@id='mat-dialog-3']/public-book-table-dialog/mat-dialog-actions/div/button[2]");
+  public static final By sendSearch = By.className("mat-dialog-container");
 
   @Override
   public boolean isLoaded() {
 
-    // WebElement sendButton = getDriver().findElementDynamic(sendSearch);
-    return true;// sendButton.isDisplayed();
+    WebElement sendButton = getDriver().findElementDynamic(sendSearch);
+    return sendButton.isDisplayed();
+
   }
 
   @Override
