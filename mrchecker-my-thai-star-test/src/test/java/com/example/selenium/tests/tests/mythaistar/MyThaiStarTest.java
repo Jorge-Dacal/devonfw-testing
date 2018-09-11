@@ -64,7 +64,9 @@ public class MyThaiStarTest extends BaseTest {
     if (user.getUsername().equals("waiter")) {
       ThaiWaiterPage thaiWaiterPage = new ThaiWaiterPage();
       ThaiReservationsPage thaiReservationsPage = thaiWaiterPage.switchToReservations();
-      BFLogger.logInfo(thaiReservationsPage.getEmailsReservations().toString());
+      BFLogger.logInfo("Reservations objects");
+      // BFLogger.logInfo(thaiReservationsPage.getAllReservations().toString()); --> "BUENA"
+      BFLogger.logInfo(thaiReservationsPage.getAllReservationsRare().toString());
 
     } else {
       orderMenu();

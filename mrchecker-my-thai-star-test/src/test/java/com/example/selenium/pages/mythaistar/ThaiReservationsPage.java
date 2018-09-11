@@ -9,10 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
 import com.capgemini.mrchecker.selenium.core.BasePage;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
+import com.example.selenium.support.Reservation;
 
 /**
  * @author jambulud
@@ -22,7 +24,9 @@ public class ThaiReservationsPage extends BasePage {
   /* Search criteria */
   private static final By reservationsTableSearch = By.xpath("//tbody[@class='td-data-table-body']/tr");
 
-  private static final By reservationRowSearch = By.xpath(".//span");
+  private static final By reservationRowSearch = By.xpath("./td//span");
+
+  private static final By nextPageSearch = By.xpath("//button[@class=\"td-paging-bar-next-page mat-icon-button\"]");
 
   /* Map to store email/reservation id data */
   private Map<String, List<String>> tableData;
@@ -49,41 +53,6 @@ public class ThaiReservationsPage extends BasePage {
   }
 
   /**
-   * Method to get the reservations by email
-   *
-   * @return Map<String, List<String>> a map where the key is an email and the value is a list of booking ids for that
-   *         email
-   */
-  public Map<String, List<String>> getEmailsReservations() {
-
-    this.tableData = new HashMap<String, List<String>>();
-    List<WebElement> reservations = getDriver().findElementDynamics(reservationsTableSearch);
-    List<WebElement> reservationsRow;
-    List<String> ids;
-    String email, id;
-
-    for (WebElement reservation : reservations) {
-      // get date, email, id
-      reservationsRow = reservation.findElements(reservationRowSearch);
-      // get email
-      email = reservationsRow.get(1).getText();
-      System.out.printf("date: %s, email %s, id: %s\n", reservationsRow.get(0).getText(),
-          reservationsRow.get(1).getText(), reservationsRow.get(2).getText());
-
-      // get reservation id
-      id = reservationsRow.get(2).getText();
-      ids = this.tableData.getOrDefault(email, new LinkedList<String>());
-
-      ids.add(id);
-
-      this.tableData.put(email, ids);
-    }
-
-    return this.tableData;
-
-  }
-
-  /**
    * Method to get the reservations for a given email
    *
    * @return List<String> a list of booking ids for that email
@@ -93,4 +62,103 @@ public class ThaiReservationsPage extends BasePage {
     return this.tableData.getOrDefault(email, new LinkedList<String>());
   }
 
+  /**
+   * @return
+   */
+  public Map<String, List<Reservation>> getReservations(Map<String, List<Reservation>> idReservations) {
+
+    List<WebElement> reservations;
+    List<WebElement> reservationsRow;
+    // Map<String, List<Reservation>> idReservations = new HashMap<>();
+    List<Reservation> reservationsByDate;
+    String date, id, email;
+
+    reservations = getDriver().findElementDynamics(reservationsTableSearch);
+
+    for (WebElement reservationWe : reservations) {
+
+      // get date, email, id
+      // getDriver().waitForPageLoaded();
+      reservationsRow = reservationWe.findElements(reservationRowSearch);
+
+      // get email
+      date = reservationsRow.get(0).getText();
+      email = reservationsRow.get(1).getText();
+      id = reservationsRow.get(2).getText();
+
+      System.out.printf("date: %s, email: %s, id: %s\n", date, email, id);
+
+      reservationsByDate = idReservations.getOrDefault(date, new LinkedList<Reservation>());
+      reservationsByDate.add(new Reservation(date, email, id));
+
+      idReservations.put(date, reservationsByDate);
+
+    }
+
+    return idReservations;
+  }
+
+  /**
+   * @return
+   */
+  public Map<String, List<Reservation>> getAllReservations() {
+
+    Map<String, List<Reservation>> idReservations = new HashMap<>();
+    WebElement nextPage = getDriver().findElementDynamic(nextPageSearch);
+    int i = 0;
+
+    boolean b = false;
+    while (!b) {
+      System.out.println("PRUEBA " + i + " " + b);
+      idReservations = getReservations(idReservations);
+
+      JavascriptExecutor js = ((JavascriptExecutor) getDriver());
+      i++;
+
+      nextPage.click();
+      // (getDriver().waitForPageLoaded();
+      // getDriver().waitForElement(nextPageSearch);
+      nextPage = getDriver().findElementDynamic(nextPageSearch, 35);
+      b = (Boolean) js.executeScript("return arguments[0].disabled", nextPage);
+    }
+
+    return idReservations;
+  }
+
+  /**
+   * @param date
+   * @return
+   */
+  public boolean AreThereReservations(String date) {
+
+    return getAllReservations().getOrDefault(date, null) == null;
+  }
+
+  public void main(String[] args) {
+
+  }
+
+  public Map<String, List<Reservation>> getAllReservationsRare() {
+
+    Map<String, List<Reservation>> idReservations = new HashMap<>();
+    WebElement nextPage = getDriver().findElement(nextPageSearch);
+    int i = 0;
+
+    boolean b = false;
+    while (!b) {
+      System.out.println("PRUEBA " + i + " " + b);
+      idReservations = getReservations(idReservations);
+
+      JavascriptExecutor js = ((JavascriptExecutor) getDriver());
+      i++;
+
+      nextPage.click();
+      // (getDriver().waitForPageLoaded();
+      // getDriver().waitForElement(nextPageSearch);
+      nextPage = getDriver().findElement(nextPageSearch);
+      b = (Boolean) js.executeScript("return arguments[0].disabled", nextPage);
+    }
+
+    return idReservations;
+  }
 }
