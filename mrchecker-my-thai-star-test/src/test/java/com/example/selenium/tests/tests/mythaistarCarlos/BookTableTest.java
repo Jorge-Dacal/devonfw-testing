@@ -26,7 +26,7 @@ public class BookTableTest extends BaseTest {
   public void setUp() {
 
     this.myThaiStarHome = new ThaiHomePage();
-    this.bookingData = new String[] { this.user.getUsername(), this.user.getEmail(), this.user.getAmountOfGuests() };
+
   }
 
   @Override
@@ -40,12 +40,17 @@ public class BookTableTest extends BaseTest {
 
     ThaiBookPage myBookPage = this.myThaiStarHome.clickBookTable();
 
-    ThaiConfirmBookPage myComfirmPage = myBookPage.enterBookingData(this.bookingData[0], this.bookingData[1],
-        this.bookingData[2]);
+    ThaiConfirmBookPage myComfirmPage = myBookPage.enterBookingData(this.user.getUsername(), this.user.getEmail(),
+        this.user.getAmountOfGuests());
     myComfirmPage.confirmBookingData();
 
     myBookPage.checkConfirmationDialog();
 
+  }
+
+  public static void main(String[] args) {
+
+    org.junit.runner.JUnitCore.main("com.example.selenium.tests.tests.mythaistarCarlos.BookTableTest");
   }
 
 }
