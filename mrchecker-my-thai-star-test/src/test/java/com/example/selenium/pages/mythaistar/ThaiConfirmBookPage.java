@@ -1,4 +1,4 @@
-package com.example.selenium.pages.mythaistarCarlos;
+package com.example.selenium.pages.mythaistar;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
