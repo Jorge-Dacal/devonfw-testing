@@ -45,6 +45,7 @@ public class ThaiHomePage extends BasePage {
   public void load() {
 
     getDriver().get("http://mts-angular-my-thai-star-mrcheck.10.36.39.36.nip.io/");
+    getDriver().manage().window().maximize();
   }
 
   @Override

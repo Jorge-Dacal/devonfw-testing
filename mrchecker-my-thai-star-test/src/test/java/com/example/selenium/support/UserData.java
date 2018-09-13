@@ -1,13 +1,13 @@
-package com.example.selenium.pages.mythaistarCarlos;
+package com.example.selenium.support;
 
-public class User {
+public class UserData {
   private String username;
 
   private String email;
 
   private String amountOfGuests;
 
-  public User(String name, String mail, String guests) {
+  public UserData(String name, String mail, String guests) {
 
     this.username = name;
     this.email = mail;

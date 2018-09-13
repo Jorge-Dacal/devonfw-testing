@@ -12,8 +12,6 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
 public class ThaiBookPage extends BasePage {
 
-  String currentDateTimeString = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(Calendar.getInstance().getTime());
-
   private static final By inputFieldsSearch = By.xpath("//div[@class='mat-form-field-infix']");
 
   private static final By dateSearch = By.cssSelector("input[formcontrolname='bookingDate']");
@@ -58,9 +56,12 @@ public class ThaiBookPage extends BasePage {
 
   public void enterCurrentTimeAndDate() {
 
-    WebElement dateInput = getDriver().findElementDynamic(dateSearch);
-    dateInput.sendKeys(this.currentDateTimeString);
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(Calendar.DAY_OF_YEAR, 1);
+    String currentDateTimeString = new SimpleDateFormat("MM/dd/yyyy HH:mm a").format(calendar.getTime());
 
+    WebElement dateInput = getDriver().findElementDynamic(dateSearch);
+    dateInput.sendKeys(currentDateTimeString);
   }
 
   public void enterName(String name) {
@@ -83,9 +84,12 @@ public class ThaiBookPage extends BasePage {
 
   public void acceptTerms() {
 
-    JavascriptExecutor js = (JavascriptExecutor) getDriver();
-    js.executeScript("document.getElementsByClassName('mat-checkbox-inner-container')[1].click();");
-    //
+    // JavascriptExecutor js = (JavascriptExecutor) getDriver();
+    // js.executeScript("document.getElementsByClassName('mat-checkbox-inner-container')[1].click();");
+    WebElement checkbox = getDriver()
+        .findElementDynamics(By.cssSelector("label.mat-checkbox-layout > div.mat-checkbox-inner-container")).get(1);
+    checkbox.click();
+
     // System.out.println("OBTAIN CHECKBOX PARENT ID");
     // WebElement checkboxParent = getDriver()
     // .findElement(By.xpath("//ancestors::div[@class='mat-checkbox-inner-container']"));
@@ -101,7 +105,7 @@ public class ThaiBookPage extends BasePage {
   public void clickBookTable() {
 
     JavascriptExecutor js = (JavascriptExecutor) getDriver();
-    js.executeScript("document.getElementsByClassName('mat-checkbox-inner-container')[1].click();");
+    js.executeScript("document.getElementsByTagName('button')[8].click();");
 
   }
 
