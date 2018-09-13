@@ -13,6 +13,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
 import com.capgemini.mrchecker.selenium.core.BasePage;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.Button;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.example.selenium.support.Reservation;
 
@@ -27,6 +28,8 @@ public class ThaiReservationsPage extends BasePage {
   private static final By reservationRowSearch = By.xpath("./td//span");
 
   private static final By nextPageSearch = By.xpath("//button[@class=\"td-paging-bar-next-page mat-icon-button\"]");
+
+  private static final By pruebasSearch = nextPageSearch;// By.xpath("//button[3]/span/mat-icon");
 
   /* Map to store email/reservation id data */
   private Map<String, List<String>> tableData;
@@ -134,31 +137,31 @@ public class ThaiReservationsPage extends BasePage {
     return getAllReservations().getOrDefault(date, null) == null;
   }
 
-  public void main(String[] args) {
+  public ThaiTableBodyPage nextPage() {
 
+    Button nextPage = getDriver().elementButton(pruebasSearch);
+    nextPage.click();
+
+    return new ThaiTableBodyPage();
   }
 
   public Map<String, List<Reservation>> getAllReservationsRare() {
 
+    ThaiTableBodyPage thaiTable = new ThaiTableBodyPage();
     Map<String, List<Reservation>> idReservations = new HashMap<>();
-    WebElement nextPage = getDriver().findElement(nextPageSearch);
-    int i = 0;
+    idReservations = thaiTable.getReservations(idReservations);
 
-    boolean b = false;
-    while (!b) {
-      System.out.println("PRUEBA " + i + " " + b);
-      idReservations = getReservations(idReservations);
+    int i = 1;
 
-      JavascriptExecutor js = ((JavascriptExecutor) getDriver());
+    while (thaiTable.isThereANextPage()) {
+      System.out.println("PRUEBA: " + i);
+      thaiTable = thaiTable.nextPage();
+      idReservations = thaiTable.getReservations(idReservations);
       i++;
-
-      nextPage.click();
-      // (getDriver().waitForPageLoaded();
-      // getDriver().waitForElement(nextPageSearch);
-      nextPage = getDriver().findElement(nextPageSearch);
-      b = (Boolean) js.executeScript("return arguments[0].disabled", nextPage);
     }
+    ;
 
     return idReservations;
   }
+
 }

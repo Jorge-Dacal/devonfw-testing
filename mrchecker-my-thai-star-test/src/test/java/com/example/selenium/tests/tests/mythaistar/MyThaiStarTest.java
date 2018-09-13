@@ -1,6 +1,7 @@
 package com.example.selenium.tests.tests.mythaistar;
 
 import java.util.HashMap;
+import java.util.Random;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,7 +11,6 @@ import com.capgemini.mrchecker.test.core.BaseTest;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.example.selenium.pages.mythaistar.ThaiBookPage;
 import com.example.selenium.pages.mythaistar.ThaiConfirmBookPage;
-import com.example.selenium.pages.mythaistar.ThaiDateTimePage;
 import com.example.selenium.pages.mythaistar.ThaiHomePage;
 import com.example.selenium.pages.mythaistar.ThaiLoginPage;
 import com.example.selenium.pages.mythaistar.ThaiMenuPage;
@@ -64,24 +64,18 @@ public class MyThaiStarTest extends BaseTest {
     if (user.getUsername().equals("waiter")) {
       ThaiWaiterPage thaiWaiterPage = new ThaiWaiterPage();
       ThaiReservationsPage thaiReservationsPage = thaiWaiterPage.switchToReservations();
-      BFLogger.logInfo("Reservations objects");
+      // BFLogger.logInfo("Reservations objects");
       // BFLogger.logInfo(thaiReservationsPage.getAllReservations().toString()); --> "BUENA"
-      BFLogger.logInfo(thaiReservationsPage.getAllReservationsRare().toString());
+      BFLogger.logInfo(thaiReservationsPage.getAllReservations().toString());
 
     } else {
+      bookTable(user.getUsername(), getRandomEmail(), "2");
       orderMenu();
     }
 
     if (!user.getUsername().equals("fakeuser")) {
       logOut();
     }
-  }
-
-  // @Test
-  public void bookTableJA() {
-
-    ThaiBookPage bookPage = this.myThaiStarHome.clickBookTable();
-    bookPage.acceptTermsJA();
   }
 
   public void orderMenu() {
@@ -96,18 +90,21 @@ public class MyThaiStarTest extends BaseTest {
     this.myThaiStarHome.clickLogOutButton();
   }
 
-  // @Test
-  public void bookTable() {
+  public void bookTable(String username, String email, String guests) {
 
     ThaiBookPage myBookPage = this.myThaiStarHome.clickBookTable();
-    ThaiDateTimePage myDateTimePage = myBookPage.enterTimeAndDate();
-    myDateTimePage.setUpDateAndTime();
 
-    ThaiConfirmBookPage myComfirmPage = myBookPage.enterBookingData(this.bookingData[0], this.bookingData[1],
-        this.bookingData[2]);
-    myComfirmPage.confirmBookingData();
-
+    ThaiConfirmBookPage myComfirmPage = myBookPage.enterBookingData(username, email, guests);
+    String[] data = myComfirmPage.confirmBookingData();
+    System.out.printf("DATA: %s, %s, %s\n", data[0], data[1], data[2]);
     myBookPage.checkConfirmationDialog();
 
+  }
+
+  public String getRandomEmail() {
+
+    Random random = new Random();
+    int rint = random.nextInt(100000);
+    return "user0_" + rint + "_@fakemail.com";
   }
 }

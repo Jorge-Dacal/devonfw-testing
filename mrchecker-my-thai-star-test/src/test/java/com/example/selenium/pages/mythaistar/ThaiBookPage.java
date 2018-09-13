@@ -1,5 +1,8 @@
 package com.example.selenium.pages.mythaistar;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
@@ -7,19 +10,9 @@ import org.openqa.selenium.WebElement;
 import com.capgemini.mrchecker.selenium.core.BasePage;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
-/*
- * public class Time{
- * String hour;
- * String minute;
- * }
- * public class Date{
- * String day;
- * String month;
- * String year;
- * }
- */
-
 public class ThaiBookPage extends BasePage {
+
+  String currentDateTimeString = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(Calendar.getInstance().getTime());
 
   private static final By inputFieldsSearch = By.xpath("//div[@class='mat-form-field-infix']");
 
@@ -31,7 +24,7 @@ public class ThaiBookPage extends BasePage {
 
   private static final By guestsSearch = By.cssSelector("input[formcontrolname='assistants']");
 
-  private static final By checkboxSearch = By.className("mat-checkbox-inner-container");
+  private static final By checkboxSearch = By.className("mat-checkbox");
 
   private static final String xpathBookTableButton = "//*[@id='mat-tab-content-0-0']/div/div/div[2]/form/div[3]/button";
 
@@ -39,15 +32,7 @@ public class ThaiBookPage extends BasePage {
 
   private static final By headerSearch = By.tagName("h3");
 
-  private static final String xpathDateTime = "//*[@id=\"mat-tab-content-1-0\"]/div/div/div[2]/form/div[2]/mat-form-field[1]/div/div[1]/div";
-
-  private static final By dateTimeSearch = By.xpath(xpathDateTime);
-
-  private static final By dateTimeInputSearch = By.tagName("input");
-
-  private static final String xpathConfirmationDialog = "//*[@id='cdk-overlay-29']/snack-bar-container/simple-snack-bar";
-
-  private static final By dialogSearch = By.xpath(xpathConfirmationDialog);
+  private static final By dialogSearch = By.className("bgc-green-600");
 
   @Override
   public boolean isLoaded() {
@@ -55,7 +40,7 @@ public class ThaiBookPage extends BasePage {
     String text = "You can invite your friends to lunch or book a table";
     WebElement header = getDriver().findElementDynamic(headerSearch);
     String headerText = header.getText();
-    // System.out.println("header" + headerText+ headerText.equals(text));
+
     return headerText.equals(text);
   }
 
@@ -71,16 +56,10 @@ public class ThaiBookPage extends BasePage {
     return "";
   }
 
-  public ThaiDateTimePage enterTimeAndDate() {
+  public void enterCurrentTimeAndDate() {
 
-    // reserva para una hora despues dando click a la flecha de "+1 hora"
-    // entonces hace click en el icono de "visto"
-    // List<WebElement> inputFields = new ArrayList<WebElement>();
-    // inputFields = getDriver().findElementDynamics(inputFieldsSearch);
     WebElement dateInput = getDriver().findElementDynamic(dateSearch);
-    // WebElement dateInput = inputFields.get(2);
-    dateInput.click();
-    return new ThaiDateTimePage();
+    dateInput.sendKeys(this.currentDateTimeString);
 
   }
 
@@ -104,20 +83,31 @@ public class ThaiBookPage extends BasePage {
 
   public void acceptTerms() {
 
-    WebElement checkbox = getDriver().findElementDynamic(checkboxSearch);
-    checkbox.click();
+    JavascriptExecutor js = (JavascriptExecutor) getDriver();
+    js.executeScript("document.getElementsByClassName('mat-checkbox-inner-container')[1].click();");
+    //
+    // System.out.println("OBTAIN CHECKBOX PARENT ID");
+    // WebElement checkboxParent = getDriver()
+    // .findElement(By.xpath("//ancestors::div[@class='mat-checkbox-inner-container']"));
+    // System.out.println("OBTAIN CHECKBOX PARENT 2");
+    // String checkboxParent_id = checkboxParent.getAttribute("id");
+    // System.out.println("CHECKBOX PARENT ID: " + checkboxParent_id);
+    // WebElement checkbox = getDriver().findElement(
+    // By.cssSelector("#" + checkboxParent_id + " > label.mat-checkbox-layout > div.mat-checkbox-inner-container"));
+    // checkbox.click();
+
   }
 
   public void clickBookTable() {
 
-    WebElement bookTableButton = getDriver().findElementDynamic(bookTableButtonSearch);
-    getDriver().waitUntilElementIsClickable(bookTableButtonSearch);
-    bookTableButton.click();
+    JavascriptExecutor js = (JavascriptExecutor) getDriver();
+    js.executeScript("document.getElementsByClassName('mat-checkbox-inner-container')[1].click();");
+
   }
 
   public ThaiConfirmBookPage enterBookingData(String name, String email, String amountOfGuests) {
 
-    // enterTimeAndDate(time, date);
+    enterCurrentTimeAndDate();
     enterName(name);
     enterEmail(email);
     enterGuests(amountOfGuests);
@@ -127,30 +117,10 @@ public class ThaiBookPage extends BasePage {
     return new ThaiConfirmBookPage();
   }
 
-  public void checkConfirmationDialog() {
+  public boolean checkConfirmationDialog() {
 
-    WebElement confirmationDialog = getDriver().findElementDynamic(dialogSearch);
-    System.out.println(confirmationDialog.getAttribute("class"));
-  }
-
-  public void acceptTermsJA() {
-
-    JavascriptExecutor js = (JavascriptExecutor) getDriver();
-    js.executeScript("document.getElementsByClassName('mat-checkbox-inner-container')[1].click();");
-
-    /*
-     * Dummy code, just for the wait, otherwise you couldn't see the clicked checkbox. This has to be deleted
-     * List<WebElement> checkBox = getDriver()
-     * .findElementDynamics(By.xpath("//span[@class=\"mat-checkbox-inner-container\"]")); checkBox.get(1).click();
-     */
+    WebElement greenConfirmationDialog = getDriver().findElementDynamic(dialogSearch);
+    return greenConfirmationDialog.isDisplayed();
   }
 
 }
-
-/*
- * System.out.println("Ha pasado al enter credentials"); WebElement usernameTextBox =
- * getDriver().findElementDynamic(usernameSearch); WebElement passwordTextBox =
- * getDriver().findElementDynamic(passwordSearch); WebElement accessButton; usernameTextBox.sendKeys(username);
- * passwordTextBox.sendKeys(password); getDriver().waitUntilElementIsClickable(acessButtonSearch); accessButton =
- * getDriver().findElementDynamic(acessButtonSearch);
- */
