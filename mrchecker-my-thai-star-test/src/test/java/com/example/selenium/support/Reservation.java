@@ -7,9 +7,13 @@ package com.example.selenium.support;
 public class Reservation {
   private String date;
 
+  private String name;
+
   private String email;
 
   private String id;
+
+  private int guests;
 
   /**
    * The constructor.
@@ -31,10 +35,43 @@ public class Reservation {
    * @param date
    * @param email
    */
-  public Reservation(String date, String email) {
+  public Reservation(String date, String email, int guests) {
 
     this.date = date;
     this.email = email;
+    this.guests = guests;
+  }
+
+  /**
+   * @return id
+   */
+  public String getId() {
+
+    return this.id;
+  }
+
+  /**
+   * @param id new value of {@link #getid}.
+   */
+  public void setId(String id) {
+
+    this.id = id;
+  }
+
+  /**
+   * @return guests
+   */
+  public int getGuests() {
+
+    return this.guests;
+  }
+
+  /**
+   * @param guests new value of {@link #getguests}.
+   */
+  public void setGuests(int guests) {
+
+    this.guests = guests;
   }
 
   public String getDate() {
@@ -60,6 +97,22 @@ public class Reservation {
   public void setEmail(String email) {
 
     this.email = email;
+  }
+
+  /**
+   * @return name
+   */
+  public String getName() {
+
+    return this.name;
+  }
+
+  /**
+   * @param name new value of {@link #getname}.
+   */
+  public void setName(String name) {
+
+    this.name = name;
   }
 
   /**

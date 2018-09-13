@@ -19,7 +19,7 @@ import com.example.selenium.pages.mythaistar.ThaiMenuPage;
 import com.example.selenium.pages.mythaistar.ThaiReservationsPage;
 import com.example.selenium.pages.mythaistar.ThaiSummaryPage;
 import com.example.selenium.pages.mythaistar.ThaiWaiterPage;
-import com.example.selenium.support.UserData;
+import com.example.selenium.support.Reservation;
 import com.example.selenium.support.UserMapper;
 import com.example.selenium.support.UserMapper.User;
 
@@ -46,7 +46,7 @@ public class MyThaiStarTest extends BaseTest {
 
   private String amountOfGuests = "8";
 
-  UserData user;
+  Reservation user;
 
   @Override
   public void setUp() {
@@ -54,7 +54,6 @@ public class MyThaiStarTest extends BaseTest {
     this.myThaiStarHome = new ThaiHomePage();
     this.loginUsers = new HashMap<>();
     this.bookingId = "CB_20170510_123502655Z";
-    this.user = new UserData(this.name, this.email, this.amountOfGuests);
   }
 
   @Override
@@ -91,28 +90,24 @@ public class MyThaiStarTest extends BaseTest {
 
   @Test
   @FileParameters(value = "src/test/resources/datadriven/test_users.csv", mapper = UserMapper.class)
-  public void login_logout_bookMenu2(User user) {
+  public void login(User user) {
 
     ThaiLoginPage loginPage = this.myThaiStarHome.clickLogInButton();
 
     loginPage.enterCredentials(user.getUsername(), user.getPassword());
     Assert.assertTrue("Usuario no logeado", this.myThaiStarHome.isUserLogged(user.getUsername()));
 
-    if (user.getUsername().equals("waiter")) {
-      ThaiWaiterPage thaiWaiterPage = new ThaiWaiterPage();
-      ThaiReservationsPage thaiReservationsPage = thaiWaiterPage.switchToReservations();
-      // BFLogger.logInfo("Reservations objects");
-      // BFLogger.logInfo(thaiReservationsPage.getAllReservations().toString()); --> "BUENA"
-      BFLogger.logInfo(thaiReservationsPage.getAllReservations().toString());
+    logOut();
+  }
 
-    } else {
-      bookTable();
-      orderMenu();
-    }
+  @Test
+  public void loginFake() {
 
-    if (!user.getUsername().equals("fakeuser")) {
-      logOut();
-    }
+    ThaiLoginPage loginPage = this.myThaiStarHome.clickLogInButton();
+
+    String userName = "userFake";
+    loginPage.enterCredentials(userName, "passwordfake");
+    Assert.assertFalse("Usuario logeado", this.myThaiStarHome.isUserLogged(userName));
   }
 
   public void orderMenu() {
@@ -127,12 +122,11 @@ public class MyThaiStarTest extends BaseTest {
     this.myThaiStarHome.clickLogOutButton();
   }
 
-  public void bookTable() {
+  public void bookTable(Reservation reservation) {
 
     ThaiBookPage myBookPage = this.myThaiStarHome.clickBookTable();
 
-    ThaiConfirmBookPage myComfirmPage = myBookPage.enterBookingData(this.user.getUsername(), this.user.getEmail(),
-        this.user.getAmountOfGuests());
+    ThaiConfirmBookPage myComfirmPage = myBookPage.enterBookingData(reservation);
     String[] data = myComfirmPage.confirmBookingData();
     System.out.printf("DATA: %s, %s, %s\n", data[0], data[1], data[2]);
     myBookPage.checkConfirmationDialog();
@@ -146,7 +140,7 @@ public class MyThaiStarTest extends BaseTest {
     return "user0_" + rint + "_@test.com";
   }
 
-  public String TimeAndDate() {
+  public String setTimeAndDate() {
 
     Calendar calendar = Calendar.getInstance();
     calendar.add(Calendar.DAY_OF_YEAR, 1);

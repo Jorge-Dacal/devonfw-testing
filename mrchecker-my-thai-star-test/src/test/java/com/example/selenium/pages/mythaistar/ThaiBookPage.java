@@ -1,14 +1,12 @@
 package com.example.selenium.pages.mythaistar;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
 import com.capgemini.mrchecker.selenium.core.BasePage;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
+import com.example.selenium.support.Reservation;
 
 public class ThaiBookPage extends BasePage {
 
@@ -54,14 +52,10 @@ public class ThaiBookPage extends BasePage {
     return "";
   }
 
-  public void enterCurrentTimeAndDate() {
-
-    Calendar calendar = Calendar.getInstance();
-    calendar.add(Calendar.DAY_OF_YEAR, 1);
-    String currentDateTimeString = new SimpleDateFormat("MM/dd/yyyy HH:mm a").format(calendar.getTime());
+  public void enterTimeAndDate(String Date) {
 
     WebElement dateInput = getDriver().findElementDynamic(dateSearch);
-    dateInput.sendKeys(currentDateTimeString);
+    dateInput.sendKeys(Date);
   }
 
   public void enterName(String name) {
@@ -76,10 +70,10 @@ public class ThaiBookPage extends BasePage {
     emailInput.sendKeys(email);
   }
 
-  public void enterGuests(String amountOfGuests) {
+  public void enterGuests(int amountOfGuests) {
 
     WebElement guestsInput = getDriver().findElementDynamic(guestsSearch);
-    guestsInput.sendKeys(amountOfGuests);
+    guestsInput.sendKeys(Integer.toString(amountOfGuests));
   }
 
   public void acceptTerms() {
@@ -109,12 +103,12 @@ public class ThaiBookPage extends BasePage {
 
   }
 
-  public ThaiConfirmBookPage enterBookingData(String name, String email, String amountOfGuests) {
+  public ThaiConfirmBookPage enterBookingData(Reservation reservation) {
 
-    enterCurrentTimeAndDate();
-    enterName(name);
-    enterEmail(email);
-    enterGuests(amountOfGuests);
+    enterTimeAndDate(reservation.getDate());
+    enterName(reservation.getName());
+    enterEmail(reservation.getEmail());
+    enterGuests(reservation.getGuests());
     acceptTerms();
     clickBookTable();
 
