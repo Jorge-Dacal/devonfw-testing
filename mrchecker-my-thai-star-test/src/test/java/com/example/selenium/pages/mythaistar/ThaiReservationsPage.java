@@ -13,9 +13,8 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
 import com.capgemini.mrchecker.selenium.core.BasePage;
-import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.Button;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
-import com.example.selenium.support.Reservation;
+import com.example.selenium.common.data.Reservation;
 
 /**
  * @author jambulud
@@ -29,7 +28,14 @@ public class ThaiReservationsPage extends BasePage {
 
   private static final By nextPageSearch = By.xpath("//button[@class=\"td-paging-bar-next-page mat-icon-button\"]");
 
-  private static final By pruebasSearch = nextPageSearch;// By.xpath("//button[3]/span/mat-icon");
+  private static final By searchBarFilterParent = By.xpath("//div[@class=\"td-expansion-panel-header mat-ripple\"]");
+
+  // private static final By searchBarFilterFromParent = By.className("td-expansion-label");
+  private static final By searchBarFilterFromParent = By.className("td-expand-icon");
+
+  private static final By emailInputSearch = By.xpath("//input[@name=\"email\"]");
+
+  private static final By submitButtonSearch = By.xpath("//button[@type='submit']");
 
   /* Map to store email/reservation id data */
   private Map<String, List<String>> tableData;
@@ -68,26 +74,104 @@ public class ThaiReservationsPage extends BasePage {
   /**
    * @return
    */
-  public Map<String, List<Reservation>> getReservations(Map<String, List<Reservation>> idReservations) {
+  /*
+   * public Map<String, List<Reservation>> getAllReservations() {
+   *
+   * Map<String, List<Reservation>> idReservations = new HashMap<>(); WebElement nextPage =
+   * getDriver().findElementDynamic(nextPageSearch); int i = 0;
+   *
+   * boolean b = false; while (!b) { System.out.println("PRUEBA " + i + " " + b); idReservations =
+   * getReservations(idReservations);
+   *
+   * JavascriptExecutor js = ((JavascriptExecutor) getDriver()); i++;
+   *
+   * nextPage.click(); // (getDriver().waitForPageLoaded(); // getDriver().waitForElement(nextPageSearch); nextPage =
+   * getDriver().findElementDynamic(nextPageSearch, 35); b = (Boolean) js.executeScript("return arguments[0].disabled",
+   * nextPage); }
+   *
+   * return idReservations; }
+   */
+
+  /**
+   * @param date
+   * @return
+   */
+  /*
+   * public boolean AreThereReservations(String date) {
+   *
+   * return getAllReservations().getOrDefault(date, null) == null; }
+   *
+   * public ThaiTableBodyPage nextPage() {
+   *
+   * Button nextPage = getDriver().elementButton(nextPageSearch); nextPage.click();
+   *
+   * return new ThaiTableBodyPage(); }
+   *
+   * public Map<String, List<Reservation>> getAllReservationsRare() {
+   *
+   * ThaiTableBodyPage thaiTable = new ThaiTableBodyPage(); Map<String, List<Reservation>> idReservations = new
+   * HashMap<>(); idReservations = thaiTable.getReservations(idReservations);
+   *
+   * int i = 1;
+   *
+   * while (thaiTable.isThereANextPage()) { System.out.println("PRUEBA: " + i); thaiTable = thaiTable.nextPage();
+   * idReservations = thaiTable.getReservations(idReservations); i++; }
+   *
+   * return idReservations; }
+   */
+
+  public HashMap<String, List<Reservation>> searchDatesByEmail(String email) {
+
+    WebElement searchBarParent = getDriver().findElementDynamic(searchBarFilterParent);
+    WebElement searchBar = searchBarParent.findElement(searchBarFilterFromParent);
+    JavascriptExecutor js = (JavascriptExecutor) getDriver();
+    js.executeScript("arguments[0].click()", searchBar);
+    // searchBar.click();
+
+    WebElement emailInput = getDriver().findElementDynamics(emailInputSearch).get(1);
+    for (int i = 0; i < email.length(); i++) {
+      emailInput.sendKeys(email.charAt(i) + "");
+    }
+
+    WebElement button = getDriver().findElementDynamic(submitButtonSearch);
+    button.click();
+
+    HashMap<String, List<Reservation>> idReservations = new HashMap<>();
+    return getReservationsShownByDate(idReservations);
+  }
+
+  /**
+   * @return
+   */
+  private HashMap<String, List<Reservation>> getReservationsShownByDate(
+      HashMap<String, List<Reservation>> idReservations) {
 
     List<WebElement> reservations;
     List<WebElement> reservationsRow;
-    // Map<String, List<Reservation>> idReservations = new HashMap<>();
     List<Reservation> reservationsByDate;
     String date, id, email;
 
+    System.out.println("ANTES DE BUSCAR");
     reservations = getDriver().findElementDynamics(reservationsTableSearch);
+    System.out.println("DESPUES DE BUSCAR");
 
     for (WebElement reservationWe : reservations) {
 
-      // get date, email, id
-      // getDriver().waitForPageLoaded();
+      System.out.println("ERROR 1");
       reservationsRow = reservationWe.findElements(reservationRowSearch);
 
+      System.out.println("ERROR 2");
+      System.out.println("RESERVATION SIZE: " + reservationsRow.size());
+      System.out.println("RESERVATION VALUES");
+      System.out.println("DATE: " + reservationsRow.get(0).getAttribute("class"));
+      System.out.println("EMAIL: " + reservationsRow.get(1).getAttribute("class"));
+      System.out.println("ID: " + reservationsRow.get(2).getAttribute("class"));
       // get email
       date = reservationsRow.get(0).getText();
       email = reservationsRow.get(1).getText();
       id = reservationsRow.get(2).getText();
+
+      System.out.println("ERROR 3");
 
       System.out.printf("date: %s, email: %s, id: %s\n", date, email, id);
 
@@ -97,69 +181,6 @@ public class ThaiReservationsPage extends BasePage {
       idReservations.put(date, reservationsByDate);
 
     }
-
-    return idReservations;
-  }
-
-  /**
-   * @return
-   */
-  public Map<String, List<Reservation>> getAllReservations() {
-
-    Map<String, List<Reservation>> idReservations = new HashMap<>();
-    WebElement nextPage = getDriver().findElementDynamic(nextPageSearch);
-    int i = 0;
-
-    boolean b = false;
-    while (!b) {
-      System.out.println("PRUEBA " + i + " " + b);
-      idReservations = getReservations(idReservations);
-
-      JavascriptExecutor js = ((JavascriptExecutor) getDriver());
-      i++;
-
-      nextPage.click();
-      // (getDriver().waitForPageLoaded();
-      // getDriver().waitForElement(nextPageSearch);
-      nextPage = getDriver().findElementDynamic(nextPageSearch, 35);
-      b = (Boolean) js.executeScript("return arguments[0].disabled", nextPage);
-    }
-
-    return idReservations;
-  }
-
-  /**
-   * @param date
-   * @return
-   */
-  public boolean AreThereReservations(String date) {
-
-    return getAllReservations().getOrDefault(date, null) == null;
-  }
-
-  public ThaiTableBodyPage nextPage() {
-
-    Button nextPage = getDriver().elementButton(pruebasSearch);
-    nextPage.click();
-
-    return new ThaiTableBodyPage();
-  }
-
-  public Map<String, List<Reservation>> getAllReservationsRare() {
-
-    ThaiTableBodyPage thaiTable = new ThaiTableBodyPage();
-    Map<String, List<Reservation>> idReservations = new HashMap<>();
-    idReservations = thaiTable.getReservations(idReservations);
-
-    int i = 1;
-
-    while (thaiTable.isThereANextPage()) {
-      System.out.println("PRUEBA: " + i);
-      thaiTable = thaiTable.nextPage();
-      idReservations = thaiTable.getReservations(idReservations);
-      i++;
-    }
-    ;
 
     return idReservations;
   }

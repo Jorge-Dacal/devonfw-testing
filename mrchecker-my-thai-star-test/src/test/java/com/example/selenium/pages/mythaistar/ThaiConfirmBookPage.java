@@ -1,7 +1,5 @@
 package com.example.selenium.pages.mythaistar;
 
-import java.util.List;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -11,7 +9,8 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
 public class ThaiConfirmBookPage extends BasePage {
   public static final By sendSearch = By.className("mat-dialog-container");
 
-  public static final By dataTextSearch = By.xpath("//div[@class=\"justify-space-between\"]/span");
+  public static final By sendButton = By
+      .xpath("//button[@class=\"text-upper mat-button mat-accent\" and not(@type=\"button\")]");
 
   @Override
   public boolean isLoaded() {
@@ -33,18 +32,10 @@ public class ThaiConfirmBookPage extends BasePage {
     return "";
   }
 
-  public String[] confirmBookingData() {
+  public void confirmBookingData() {
 
-    List<WebElement> dataText = getDriver().findElementDynamics(dataTextSearch);
-    String date = dataText.get(1).getText();
-    String name = dataText.get(2).getText();
-    String email = dataText.get(3).getText();
-
-    WebElement sendButton = getDriver().findElementDynamics(By.tagName("button")).get(10);
-    System.out.println(sendButton.getAttribute("class"));
-    sendButton.click();
-
-    return new String[] { date, name, email };
+    WebElement send = getDriver().findElementDynamic(sendButton);
+    send.click();
   }
 
 }

@@ -11,7 +11,7 @@ import org.openqa.selenium.WebElement;
 
 import com.capgemini.mrchecker.selenium.core.BasePage;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
-import com.example.selenium.support.Reservation;
+import com.example.selenium.common.data.Reservation;
 
 /**
  * @author jambulud

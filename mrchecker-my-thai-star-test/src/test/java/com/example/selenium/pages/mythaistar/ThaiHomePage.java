@@ -15,9 +15,13 @@ import com.capgemini.mrchecker.selenium.core.exceptions.BFElementNotFoundExcepti
 /**
  * @author jambulud
  */
+// @Configuration
+// @PropertySource("file:config.properties")
 public class ThaiHomePage extends BasePage {
 
   /* Search criteria */
+  private static final String mathaistarUrl = "http://mts-angular-my-thai-star-mrcheck.10.36.39.36.nip.io/";
+
   private static final By loginButtonSearch = By.cssSelector("button.mat-icon-button:nth-child(6)");
 
   private static final By logoutButtonSearch = By.xpath("//button[@class=\"mat-icon-button\"]");
@@ -28,9 +32,8 @@ public class ThaiHomePage extends BasePage {
 
   private static final By menuTabSearch = By.xpath("//a[@routerlink='/menu']");
 
-  private static final String bookTableButtonXpath = "//*[@id=\"homeCard\"]/own-home-card[1]/mat-card/mat-card-actions/button";
-
-  private static final By bookTableButtonSearch = By.xpath(bookTableButtonXpath);
+  private static final By bookTableButtonSearch = By
+      .xpath("//*[@id=\"homeCard\"]/own-home-card[1]/mat-card/mat-card-actions/button");
 
   @Override
   public boolean isLoaded() {
@@ -44,7 +47,7 @@ public class ThaiHomePage extends BasePage {
   @Override
   public void load() {
 
-    getDriver().get("http://mts-angular-my-thai-star-mrcheck.10.36.39.36.nip.io/");
+    getDriver().get(mathaistarUrl);
     getDriver().manage().window().maximize();
   }
 
@@ -108,6 +111,19 @@ public class ThaiHomePage extends BasePage {
     try {
       List<WebElement> accessButton = getDriver().findElementDynamics(labelLoginSearch);
       if (accessButton.size() > 0 && accessButton.get(0).getText().equals(username)) {
+        return true;
+      }
+    } catch (BFElementNotFoundException e) {
+    }
+
+    return false;
+  }
+
+  public boolean isUserLogged() {
+
+    try {
+      List<WebElement> accessButton = getDriver().findElementDynamics(labelLoginSearch, 3);
+      if (accessButton.size() > 0 && accessButton.get(0).getText().length() > 0) {
         return true;
       }
     } catch (BFElementNotFoundException e) {

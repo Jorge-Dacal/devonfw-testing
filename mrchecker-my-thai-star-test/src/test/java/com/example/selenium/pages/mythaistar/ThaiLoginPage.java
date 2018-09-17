@@ -46,7 +46,6 @@ public class ThaiLoginPage extends BasePage {
    */
   public void enterCredentials(String username, String password) {
 
-    System.out.println("Ha pasado al enter credentials");
     WebDriverWait driverWait = new WebDriverWait(getDriver(), 10);
     WebElement usernameTextBox = getDriver().findElementDynamic(usernameSearch);
     WebElement passwordTextBox = getDriver().findElementDynamic(passwordSearch);

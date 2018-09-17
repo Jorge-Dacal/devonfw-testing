@@ -1,4 +1,4 @@
-package com.example.selenium.support;
+package com.example.selenium.common.data;
 
 /**
  * @author jambulud
@@ -38,6 +38,22 @@ public class Reservation {
   public Reservation(String date, String email, int guests) {
 
     this.date = date;
+    this.email = email;
+    this.guests = guests;
+  }
+
+  /**
+   * The constructor.
+   *
+   * @param date
+   * @param name
+   * @param email
+   * @param guests
+   */
+  public Reservation(String date, String name, String email, int guests) {
+
+    this.date = date;
+    this.name = name;
     this.email = email;
     this.guests = guests;
   }
