@@ -3,6 +3,7 @@
  */
 package com.example.selenium.pages.mythaistar;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.openqa.selenium.WebElement;
 import com.capgemini.mrchecker.selenium.core.BasePage;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.example.selenium.common.data.Reservation;
+import com.example.selenium.common.utils.Utils;
 
 /**
  * @author jambulud
@@ -136,6 +138,12 @@ public class ThaiReservationsPage extends BasePage {
     WebElement button = getDriver().findElementDynamic(submitButtonSearch);
     button.click();
 
+    try {
+      getDriver().findElementDynamics(By.cssSelector("fskjacb"), 3);
+    } catch (Exception e) {
+
+    }
+
     HashMap<String, List<Reservation>> idReservations = new HashMap<>();
     return getReservationsShownByDate(idReservations);
   }
@@ -147,7 +155,6 @@ public class ThaiReservationsPage extends BasePage {
       HashMap<String, List<Reservation>> idReservations) {
 
     List<WebElement> reservations;
-    List<WebElement> reservationsRow;
     List<Reservation> reservationsByDate;
     String date, id, email;
 
@@ -155,23 +162,18 @@ public class ThaiReservationsPage extends BasePage {
     reservations = getDriver().findElementDynamics(reservationsTableSearch);
     System.out.println("DESPUES DE BUSCAR");
 
-    for (WebElement reservationWe : reservations) {
+    for (int i = 0; i < reservations.size(); i++) {
+      System.out.println(reservations.size());
 
-      System.out.println("ERROR 1");
-      reservationsRow = reservationWe.findElements(reservationRowSearch);
-
-      System.out.println("ERROR 2");
-      System.out.println("RESERVATION SIZE: " + reservationsRow.size());
-      System.out.println("RESERVATION VALUES");
-      System.out.println("DATE: " + reservationsRow.get(0).getAttribute("class"));
-      System.out.println("EMAIL: " + reservationsRow.get(1).getAttribute("class"));
-      System.out.println("ID: " + reservationsRow.get(2).getAttribute("class"));
-      // get email
-      date = reservationsRow.get(0).getText();
-      email = reservationsRow.get(1).getText();
-      id = reservationsRow.get(2).getText();
-
-      System.out.println("ERROR 3");
+      date = getDriver().findElementDynamic(thisData(3 * i + 1)).getText();
+      email = getDriver().findElementDynamic(thisData(3 * i + 2)).getText();
+      id = getDriver().findElementDynamic(thisData(3 * i + 3)).getText();
+      try {
+        date = Utils.changeDateFormat(date, "MMM dd, yyyy HH:mm a", "MM/dd/yyyy HH:mm a");
+      } catch (ParseException e) {
+        System.err.println("Date not formated properly at getReservationsShownByDate in ThaiReservationsPage");
+        e.printStackTrace();
+      }
 
       System.out.printf("date: %s, email: %s, id: %s\n", date, email, id);
 
@@ -179,10 +181,15 @@ public class ThaiReservationsPage extends BasePage {
       reservationsByDate.add(new Reservation(date, email, id));
 
       idReservations.put(date, reservationsByDate);
-
+      // reservations = getDriver().findElementDynamics(reservationsTableSearch);
     }
 
     return idReservations;
+  }
+
+  public By thisData(int index) {
+
+    return By.xpath("//tbody[@class='td-data-table-body']/tr/td[" + index + "]//span");
   }
 
 }
