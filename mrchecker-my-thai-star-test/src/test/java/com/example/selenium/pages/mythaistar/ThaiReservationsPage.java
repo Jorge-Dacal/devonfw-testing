@@ -129,11 +129,23 @@ public class ThaiReservationsPage extends BasePage {
     JavascriptExecutor js = (JavascriptExecutor) getDriver();
     js.executeScript("arguments[0].click()", searchBar);
     // searchBar.click();
+    try {
+      getDriver().findElementDynamic(By.xpath("adasd"), 3);
+    } catch (Exception e) {
 
-    WebElement emailInput = getDriver().findElementDynamics(emailInputSearch).get(1);
-    for (int i = 0; i < email.length(); i++) {
-      emailInput.sendKeys(email.charAt(i) + "");
     }
+
+    // WebElement emailInput = getDriver().findElementDynamics(emailInputSearch).get(1);
+    // emailInput.click();
+
+    int index = 1;
+
+    Utils.sendKeysWithCheck(email, emailInputSearch, getDriver(), getWebDriverWait(), index);
+
+    // for (int i = 0; i < email.length(); i++) {
+    // emailInput.sendKeys(email.charAt(i) + "");
+    //
+    // }
 
     WebElement button = getDriver().findElementDynamic(submitButtonSearch);
     button.click();
@@ -169,7 +181,7 @@ public class ThaiReservationsPage extends BasePage {
       email = getDriver().findElementDynamic(thisData(3 * i + 2)).getText();
       id = getDriver().findElementDynamic(thisData(3 * i + 3)).getText();
       try {
-        date = Utils.changeDateFormat(date, "MMM dd, yyyy HH:mm a", "MM/dd/yyyy HH:mm a");
+        date = Utils.changeDateFormat(date, "MMM dd, yyyy hh:mm a", "MM/dd/yyyy hh:mm a");
       } catch (ParseException e) {
         System.err.println("Date not formated properly at getReservationsShownByDate in ThaiReservationsPage");
         e.printStackTrace();

@@ -7,6 +7,7 @@ import org.openqa.selenium.WebElement;
 import com.capgemini.mrchecker.selenium.core.BasePage;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.example.selenium.common.data.Reservation;
+import com.example.selenium.common.utils.Utils;
 
 public class ThaiBookPage extends BasePage {
 
@@ -55,34 +56,38 @@ public class ThaiBookPage extends BasePage {
   public void enterTimeAndDate(String Date) {
 
     WebElement dateInput = getDriver().findElementDynamic(dateSearch);
-    dateInput.sendKeys(Date);
+    Utils.sendKeysWithCheck(Date, dateSearch, getDriver(), getWebDriverWait());
+    // dateInput.sendKeys(Date);
   }
 
   public void enterName(String name) {
 
     WebElement nameInput = getDriver().findElementDynamic(nameSearch);
-    nameInput.sendKeys(name);
+    Utils.sendKeysWithCheck(name, nameSearch, getDriver(), getWebDriverWait());
+    // nameInput.sendKeys(name);
   }
 
   public void enterEmail(String email) {
 
     WebElement emailInput = getDriver().findElementDynamic(emailSearch);
-    emailInput.sendKeys(email);
+    Utils.sendKeysWithCheck(email, emailSearch, getDriver(), getWebDriverWait());
+    // emailInput.sendKeys(email);
   }
 
   public void enterGuests(int amountOfGuests) {
 
     WebElement guestsInput = getDriver().findElementDynamic(guestsSearch);
-    guestsInput.sendKeys(Integer.toString(amountOfGuests));
+    Utils.sendKeysWithCheck(Integer.toString(amountOfGuests), guestsSearch, getDriver(), getWebDriverWait());
+    // guestsInput.sendKeys(Integer.toString(amountOfGuests));
   }
 
   public void acceptTerms() {
 
-    // JavascriptExecutor js = (JavascriptExecutor) getDriver();
-    // js.executeScript("document.getElementsByClassName('mat-checkbox-inner-container')[1].click();");
-    WebElement checkbox = getDriver()
-        .findElementDynamics(By.cssSelector("label.mat-checkbox-layout > div.mat-checkbox-inner-container")).get(1);
-    checkbox.click();
+    JavascriptExecutor js = (JavascriptExecutor) getDriver();
+    js.executeScript("document.getElementsByClassName('mat-checkbox-inner-container')[1].click();");
+    // WebElement checkbox = getDriver()
+    // .findElementDynamics(By.cssSelector("label.mat-checkbox-layout > div.mat-checkbox-inner-container")).get(1);
+    // checkbox.click();
 
     // System.out.println("OBTAIN CHECKBOX PARENT ID");
     // WebElement checkboxParent = getDriver()

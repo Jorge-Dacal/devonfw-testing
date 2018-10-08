@@ -6,6 +6,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.capgemini.mrchecker.selenium.core.newDrivers.INewWebDriver;
+
 /**
  * @author jodacalc
  *
@@ -22,7 +30,7 @@ public class Utils {
 
     Calendar calendar = Calendar.getInstance();
     calendar.add(Calendar.DAY_OF_YEAR, 1);
-    return new SimpleDateFormat("MM/dd/yyyy HH:mm a").format(calendar.getTime());
+    return new SimpleDateFormat("MM/dd/yyyy hh:mm a").format(calendar.getTime());
   }
 
   public static int getRandom1toMax(int max) {
@@ -44,11 +52,51 @@ public class Utils {
 
     String date;
     try {
-      date = changeDateFormat("Sep 19, 2018 8:14 AM", "MMM dd, yyyy HH:mm a", "MM/dd/yyyy HH:mm a");
+      date = changeDateFormat("Sep 19, 2018 8:14 AM", "MMM dd, yyyy hh:mm a", "MM/dd/yyyy hh:mm a");
       System.out.println(date);
     } catch (ParseException e) {
       System.out.println("No funciona");
     }
 
+  }
+
+  public static void sendKeysWithCheck(String text, By textFieldSearchCriteria, INewWebDriver driver,
+      WebDriverWait wait, int index) {
+
+    boolean writtenCorrectly;
+    WebElement textField;
+    char character;
+
+    for (int i = 0; i < text.length(); i++) {
+      // System.out.println("#1");
+      character = text.charAt(i);
+      writtenCorrectly = false;
+      while (!writtenCorrectly) {
+        // System.out.println("#2");
+        textField = driver.findElementDynamics(textFieldSearchCriteria).get(index);
+        System.out.println("TEXTFIELD ::::::::::::::::::::::::::::::::::::::::::::::" + textField.toString());
+        textField.sendKeys(character + "");
+        try {
+          // System.out.println("#3");
+          int l = i;
+          wait.until((WebDriver wd) -> driver.findElementDynamic(textFieldSearchCriteria).getAttribute("value")
+              .length() == l + 1);
+          writtenCorrectly = true;
+        } catch (TimeoutException e) {
+          // System.out.println("#4");
+          System.out.println("Character not written: " + character);
+        }
+      }
+      // System.out.println("#5");
+      System.out.println("Progress: " + text.substring(0, i + 1));
+    }
+
+  }
+
+  public static void sendKeysWithCheck(String text, By textFieldSearchCriteria, INewWebDriver driver,
+      WebDriverWait wait) {
+
+    int index = 0;
+    sendKeysWithCheck(text, textFieldSearchCriteria, driver, wait, index);
   }
 }

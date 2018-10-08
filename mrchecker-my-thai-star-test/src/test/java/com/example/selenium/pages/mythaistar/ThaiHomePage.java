@@ -20,7 +20,7 @@ import com.capgemini.mrchecker.selenium.core.exceptions.BFElementNotFoundExcepti
 public class ThaiHomePage extends BasePage {
 
   /* Search criteria */
-  private static final String mathaistarUrl = "http://mts-angular-my-thai-star-mrcheck.10.36.39.36.nip.io/";
+  private static final String mythaistarUrl = "http://mts-angular-my-thai-star-mrcheck.10.36.39.36.nip.io/";
 
   private static final By loginButtonSearch = By.cssSelector("button.mat-icon-button:nth-child(6)");
 
@@ -47,7 +47,7 @@ public class ThaiHomePage extends BasePage {
   @Override
   public void load() {
 
-    getDriver().get(mathaistarUrl);
+    getDriver().get(mythaistarUrl);
     getDriver().manage().window().maximize();
   }
 
@@ -110,6 +110,9 @@ public class ThaiHomePage extends BasePage {
 
     try {
       List<WebElement> accessButton = getDriver().findElementDynamics(labelLoginSearch);
+      // System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA: " + accessButton.size());
+      // System.out
+      // .println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB: " + accessButton.get(0).getText().equals(username));
       if (accessButton.size() > 0 && accessButton.get(0).getText().equals(username)) {
         return true;
       }

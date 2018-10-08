@@ -46,15 +46,15 @@ public class MyThaiStarTest extends BaseTest {
 
   }
 
-  // @Test
-  // @FileParameters(value = "src/test/resources/datadriven/test_users.csv", mapper = UserMapper.class)
-  public void Test_loginAndLogOut(User user) {
+  @Test
+  @FileParameters(value = "src/test/resources/datadriven/test_users.csv", mapper = UserMapper.class)
+  public void Test_loginAndLogOut(User user) throws Exception {
 
     login(user);
     logOut();
   }
 
-  // @Test
+  @Test
   public void Test_loginFake() {
 
     User userfake = new User("userFake", "passwordfake");
@@ -66,7 +66,7 @@ public class MyThaiStarTest extends BaseTest {
 
   @Test
   @FileParameters(value = "src/test/resources/datadriven/test_users.csv", mapper = UserMapper.class)
-  public void Test_bookTable(User user) {
+  public void Test_bookTable(User user) throws Exception {
 
     // Generate data for reservation
     String fakeEmail = Utils.getRandomEmail(user.getUsername());
@@ -75,15 +75,15 @@ public class MyThaiStarTest extends BaseTest {
     Reservation reservation = new Reservation(date, user.getUsername(), fakeEmail, guest);
     User waiter = new User("waiter", "waiter");
 
-    // login(user);
+    login(user);
     bookTable(reservation);
-    // logOut();
+    logOut();
     login(waiter);
     verifyBooking(reservation);
     logOut();
   }
 
-  // @Test
+  @Test
   public void Test_orderMenu() {
 
     String bookingId = "CB_20170510_123502655Z";
@@ -92,12 +92,22 @@ public class MyThaiStarTest extends BaseTest {
     summaryPage.orderMenu(bookingId);
   }
 
-  private void login(User user) {
+  private void login(User user) throws Exception {
 
     ThaiLoginPage loginPage = this.myThaiStarHome.clickLogInButton();
     loginPage.enterCredentials(user.getUsername(), user.getPassword());
+    // System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDD: antes");
+    this.myThaiStarHome.isUserLogged(user.getUsername());
+
+    // if (this.myThaiStarHome.isUserLogged(user.getUsername()) == true) {
+    // System.out.println("AssertUserLogged successful");
+    // } else {
+    // throw new Exception("Error in AssertUserLogged");
+    // }
     Assert.assertTrue("User " + user.getUsername() + " not logged",
         this.myThaiStarHome.isUserLogged(user.getUsername()));
+    // System.out.println(
+    // "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC: era " + this.myThaiStarHome.isUserLogged(user.getUsername()));
   }
 
   private void logOut() {
@@ -117,15 +127,31 @@ public class MyThaiStarTest extends BaseTest {
     myBookPage.checkConfirmationDialog();
   }
 
-  private void verifyBooking(Reservation reservation) {
+  private void verifyBooking(Reservation reservation) throws Exception {
 
     ThaiWaiterPage myWaiterPage = new ThaiWaiterPage();
     ThaiReservationsPage myReservationsPage = myWaiterPage.switchToReservations();
     HashMap<String, List<Reservation>> reservations = myReservationsPage.searchDatesByEmail(reservation.getEmail());
     reservation.getDate();
-    Assert.assertTrue("Booking not found", reservations.containsKey(reservation.getDate()));
+
+    // if (reservations.containsKey(reservation.getDate()) == true) {
+    // System.out.println("AssertContainsKey successful");
+    // } else {
+    // throw new Exception("Error in AssertContainsKey");
+    // }
+    System.out.println("My reservations: " + reservations.toString());
+    System.out.println("My reservation: " + reservation.getDate());
+    Assert.assertTrue("Booking not found1", reservations.containsKey(reservation.getDate()));
+
     List<Reservation> reservationsForDate = reservations.get(reservation.getDate());
-    Assert.assertFalse("Booking not found", reservationsForDate.isEmpty());
+
+    // System.out.println(reservationsForDate);
+    // if (reservationsForDate.size() != 0) {
+    // System.out.println("AssertExistsReservation successful");
+    // } else {
+    // throw new Exception("Error in AssertExistsReservation");
+    // }
+    Assert.assertFalse("Booking not found2", reservationsForDate.isEmpty());
   }
 
 }

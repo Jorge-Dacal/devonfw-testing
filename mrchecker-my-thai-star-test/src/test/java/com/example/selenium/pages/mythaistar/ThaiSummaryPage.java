@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.capgemini.mrchecker.selenium.core.BasePage;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
+import com.example.selenium.common.utils.Utils;
 
 /**
  * @author jambulud
@@ -56,9 +57,11 @@ public class ThaiSummaryPage extends BasePage {
     WebElement checkBox = getDriver().findElementDynamic(checkBoxSearch);
     WebElement acceptButton = getDriver().findElementDynamic(acceptButtonSearch);
 
-    for (char c : bookingId.toCharArray()) {
-      textBox.sendKeys(c + "");
-    }
+    Utils.sendKeysWithCheck(bookingId, textBoxSearch, getDriver(), getWebDriverWait());
+
+    // for (char c : bookingId.toCharArray()) {
+    // textBox.sendKeys(c + "");
+    // }
 
     driverWait
         .until((driver) -> driver.findElement(textBoxSearch).getAttribute("value").length() == bookingId.length());

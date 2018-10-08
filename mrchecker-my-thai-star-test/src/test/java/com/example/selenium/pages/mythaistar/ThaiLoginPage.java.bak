@@ -7,7 +7,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.capgemini.mrchecker.selenium.core.BasePage;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.example.selenium.common.utils.Utils;
-//blablabla
+
 /**
  * @author jambulud
  */
